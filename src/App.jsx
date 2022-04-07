@@ -21,31 +21,15 @@ const App = () => {
     setInputsState({ /*jjjj*/ ...inputsState, title: "", date: "", note: "" });
   };
 
-  const handleChangeres = (e) => {
-    const paso2 = Number(e.target.value);
-    const paso = Number(e.target.value);
-    if (isNaN(paso2)) {
-      return;
-    }
-    if (isNaN(paso)) {
-      return;
-    }
-    setInputsState({
-      /*Operador espread*/ ...inputsState,
-      paso: Number(e.target.value),
-    });
-
-    setInputsState({
-      /*Operador espread*/ ...inputsState,
-      paso2: Number(e.target.value),
-    });
-  };
-
   return (
-    <div className="App">
-      <h1> Notas </h1>
-      <label>
-        {" "}
+    <div className="App container">
+      <div className="row"> 
+      <div className="col">
+        <h3>Lista</h3>
+      </div>
+      <div className="col"> 
+      <h3> Notas </h3>
+      <label className="mb-2">
         Titulo
         <input
           id="title"
@@ -56,8 +40,7 @@ const App = () => {
         />
       </label>
       <br />
-      <label>
-        {" "}
+      <label className="mb-2">
         Fecha
         <input
           id="date"
@@ -79,14 +62,18 @@ const App = () => {
           value={inputsState.note}
         />
       </label>
-      <br />
+      </div>
+      </div>
+      <hr />
+      {/* Botón para hacer reset */}
+      <div className="row">
       <button className="btn btn-primary me-2" onClick={handleClickre}
-        //onChange={handleKeyDown}
-        onChanges={handleChangeres}
+        
         >
           {/* jan*/}
-          Reset: {inputsState.valor}
+          Reset {inputsState.valor}
         </button>
+        </div>
     </div>
   );
 };
