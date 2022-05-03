@@ -10,6 +10,9 @@ const App = () => {
     note: "",
   });
 
+  let initialState = JSON.parse(localStorage.getItem("notas")) || [];
+  const [notas, setNotas] = useState(initialState);
+
   const handleInputChange = (event) => {
     setInputsState({
       ...inputsState,
@@ -21,11 +24,21 @@ const App = () => {
     setInputsState({ /*jjjj*/ ...inputsState, title: "", date: "", note: "" });
   };
 
-  let notas = JSON.parse(localStorage.getItem("notas")) || [];
   const handleClickSave = () => {
-    notas.push(inputsState);
+    setNotas([...notas, inputsState]);
     localStorage.setItem("notas", JSON.stringify(notas));
     handleClickre();
+  };
+
+  const handleRemoveNote = (index) => {
+    const nuevoArreglo = [];
+    notas.forEach((nota, i) => {
+      if (index !== i) {
+        nuevoArreglo.push(nota);
+      }
+    });
+    localStorage.setItem("notas", JSON.stringify(nuevoArreglo));
+    setNotas(nuevoArreglo);
   };
 
   return (
@@ -34,10 +47,19 @@ const App = () => {
         <div className="col">
           <h3>Lista</h3>
           <ul>
-            {notas.map((nota) => {
+            {notas.map((nota, index) => {
               return (
-                <li>
-                  {nota.title} Escribió el- {nota.date} - {nota.note}
+                <li key={index}>
+                  {nota.title} - {nota.date}&nbsp;
+                  <i
+                    className="bi-x-circle"
+                    onClick={() => handleRemoveNote(index)}
+                    style={{
+                      color: "red",
+                      cursor: "pointer",
+                      fontSize: "0.75",
+                    }}
+                  ></i>
                 </li>
               );
             })}
@@ -63,7 +85,7 @@ const App = () => {
             <input
               id="date"
               name="date"
-              type="text"
+              type="date"
               onChange={handleInputChange}
               value={inputsState.date}
               style={{ width: "100%" }}
@@ -73,10 +95,9 @@ const App = () => {
           <label style={{ width: "100%" }}>
             {" "}
             Nota
-            <input
+            <textarea
               id="note"
               name="note"
-              type="text"
               onChange={handleInputChange}
               value={inputsState.note}
               style={{ width: "100%" }}
