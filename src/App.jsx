@@ -21,8 +21,11 @@ const App = () => {
     setInputsState({ /*jjjj*/ ...inputsState, title: "", date: "", note: "" });
   };
 
+  let notas = JSON.parse(localStorage.getItem("notas")) || [];
   const handleClickSave = () => {
-    localStorage.setItem("notas", JSON.stringify(inputsState))
+    notas.push(inputsState);
+    localStorage.setItem("notas", JSON.stringify(notas));
+    handleClickre();
   };
 
   return (
@@ -30,9 +33,19 @@ const App = () => {
       <div className="row">
         <div className="col">
           <h3>Lista</h3>
+          <ul>
+            {notas.map((nota) => {
+              return (
+                <li>
+                  {nota.title} Escribió el- {nota.date} - {nota.note}
+                </li>
+              );
+            })}
+          </ul>
         </div>
         <div className="col">
           <h3> Notas </h3>
+          <label className="mb-2" style={{ width: "100%" }}></label>
           <label className="mb-2" style={{ width: "100%" }}>
             Titulo
             <input
@@ -73,26 +86,28 @@ const App = () => {
           {/* Botón para hacer reset */}
           <div className="row">
             <span className="col">
-            <button 
-            type= "button"
-            className="btn btn-primary" onClick={handleClickre}
-            style={{width: "100%"}}>
-              {/* jan*/}
-              Reset {inputsState.valor}
-            </button>
-
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleClickre}
+                style={{ width: "100%" }}
+              >
+                {/* jan*/}
+                Reset {inputsState.valor}
+              </button>
             </span>
-            
+
             {/* BOton para guardar */}
             <span className="col">
-              <button 
-              type= "button"
-              className="btn btn-primary" onClick={handleClickSave} 
-              style={{width: "100%"}}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleClickSave}
+                style={{ width: "100%" }}
+              >
                 {/* Botón que sirve para guardar*/}
-                Guardar 
-                
-              </button>{" "}
+                Guardar
+              </button>
             </span>
           </div>
         </div>
