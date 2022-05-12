@@ -26,7 +26,7 @@ const App = () => {
 
   const handleClickSave = () => {
     setNotas([...notas, inputsState]);
-    localStorage.setItem("notas", JSON.stringify(notas));
+    localStorage.setItem("notas", JSON.stringify(...notas, inputsState));
     handleClickre();
   };
 
@@ -41,29 +41,59 @@ const App = () => {
     setNotas(nuevoArreglo);
   };
 
+  const handleClickLimpiarLista = () => {
+    setNotas([]);
+    localStorage.setItem("notas", JSON.stringify([]));
+  };
+
+  const handleClickNota = (index) => {
+    setInputsState({
+      title: notas[index].title,
+      date: notas[index].date,
+      note: notas[index].note,
+    });
+  };
+
   return (
     <div className="App container">
       <div className="row">
         <div className="col">
           <h3>Lista</h3>
-          <ul>
-            {notas.map((nota, index) => {
-              return (
-                <li key={index}>
-                  {nota.title} - {nota.date}&nbsp;
-                  <i
-                    className="bi-x-circle"
-                    onClick={() => handleRemoveNote(index)}
-                    style={{
-                      color: "red",
-                      cursor: "pointer",
-                      fontSize: "0.75",
-                    }}
-                  ></i>
-                </li>
-              );
-            })}
-          </ul>
+          {notas.length === 0 ? (
+            <p> No hay notas capturadas.</p>
+          ) : (
+            <ul>
+              {notas.map((nota, index) => {
+                return (
+                  <li
+                    onClick={() => handleClickNota(index)}
+                    key={index}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {nota.title} - {nota.date}&nbsp;
+                    <i
+                      className="bi-x-circle"
+                      onClick={() => handleRemoveNote(index)}
+                      style={{
+                        color: "red",
+                        cursor: "pointer",
+                        fontSize: "0.75",
+                      }}
+                    ></i>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleClickLimpiarLista}
+            disabled={notas.length === 0}
+          >
+            Limpiar lista
+          </button>
         </div>
         <div className="col">
           <h3> Notas </h3>
@@ -112,6 +142,11 @@ const App = () => {
                 className="btn btn-primary"
                 onClick={handleClickre}
                 style={{ width: "100%" }}
+                disabled={
+                  inputsState.title === "" &&
+                  inputsState.date === "" &&
+                  inputsState.note === ""
+                }
               >
                 {/* jan*/}
                 Reset {inputsState.valor}
@@ -125,6 +160,11 @@ const App = () => {
                 className="btn btn-primary"
                 onClick={handleClickSave}
                 style={{ width: "100%" }}
+                disabled={
+                  inputsState.title === "" ||
+                  inputsState.date === "" ||
+                  inputsState.note === ""
+                }
               >
                 {/* Botón que sirve para guardar*/}
                 Guardar
