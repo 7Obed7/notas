@@ -10,6 +10,11 @@ const App = () => {
     note: "",
   });
 
+  const [isSelected, setIsSelected] = useState({
+    status: false,
+    noteSelected: null,
+  });
+
   let initialState = JSON.parse(localStorage.getItem("notas")) || [];
   const [notas, setNotas] = useState(initialState);
 
@@ -20,14 +25,16 @@ const App = () => {
     });
   };
 
-  const handleClickre = () => {
-    setInputsState({ /*jjjj*/ ...inputsState, title: "", date: "", note: "" });
+  const handleClickRe = (event) => {
+    setInputsState({ title: "", date: "", note: "" });
+    setIsSelected({ status: false, noteSelected: null });
   };
 
   const handleClickSave = () => {
     setNotas([...notas, inputsState]);
     localStorage.setItem("notas", JSON.stringify(...notas, inputsState));
-    handleClickre();
+    handleClickRe();
+    setIsSelected({ status: false, noteSelected: null });
   };
 
   const handleRemoveNote = (index) => {
@@ -47,11 +54,22 @@ const App = () => {
   };
 
   const handleClickNota = (index) => {
+    setIsSelected({ status: true, noteSelected: index });
     setInputsState({
       title: notas[index].title,
       date: notas[index].date,
       note: notas[index].note,
     });
+  };
+
+  const handleClickActualizar = () => {
+    let listaModificada = notas;
+    listaModificada[isSelected.noteSelected] = inputsState;
+    console.log(isSelected);
+    setNotas(listaModificada);
+    localStorage.setItem("notas", JSON.stringify(listaModificada));
+    handleClickRe();
+    setIsSelected({ status: false, noteSelected: null });
   };
 
   return (
@@ -97,7 +115,7 @@ const App = () => {
         </div>
         <div className="col">
           <h3> Notas </h3>
-          <label className="mb-2" style={{ width: "100%" }}></label>
+
           <label className="mb-2" style={{ width: "100%" }}>
             Titulo
             <input
@@ -140,7 +158,7 @@ const App = () => {
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={handleClickre}
+                onClick={handleClickRe}
                 style={{ width: "100%" }}
                 disabled={
                   inputsState.title === "" &&
@@ -152,6 +170,24 @@ const App = () => {
                 Reset {inputsState.valor}
               </button>
             </span>
+
+            {isSelected.status && (
+              <span className="col">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleClickActualizar}
+                  style={{ width: "100%" }}
+                  disabled={
+                    inputsState.title === "" ||
+                    inputsState.date === "" ||
+                    inputsState.note === ""
+                  }
+                >
+                  Actualizar
+                </button>
+              </span>
+            )}
 
             {/* BOton para guardar */}
             <span className="col">
